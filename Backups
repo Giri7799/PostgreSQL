@@ -1,0 +1,259 @@
+TOPIC: POSTGRES BACKUP, RESTORE, AND DISASTER RECOVERY TECHNIQUES
+MIND MAP
+PostgreSQL Backup & Point-In-Time Recovery (PITR)
+•Why Backups are Needed
+   1) Consistent Copy of Data
+   2) Avoid Data Loss
+   3) Restore Database
+   4) Avoid Catastrophic Losses
+   5) Compliance Reasons
+   6) Meet RPO/RTO
+   7) Protect Business Reputation
+   8) Causes of Data Loss
+      --User Error
+      --Hardware failure
+      --Data Corruption
+Concept Overview
+  1) Definition
+     --Restore to a specific moment in time
+  2) Requirements
+    --Backing up live database files
+    --Archiving write-ahead log (WAL)
+  3) WAL (write-ahead log)
+    --Log of all modifications
+    --Update, insert, delete
+    --Creating/deleting objects
+  4) Limitation/Scope
+    --Can not upgrade database version
+    --Only the whole database cluster backup
+    --Not individual databases/tables
+  5) Advantages
+    --Can be done while the database is online
+Backup Steps for PITR
+ 1) Enable WAL Archiving
+     Modify postgresql.conf
+     Set ‘wal_level’ to ‘replica’ (default)
+     Set ‘archive_mode’ to ‘bin.’
+     Specify ‘archive_command’
+2) Manage WAL Files
+    Develop a retention process
+    Periodic deletion
+    Copying to external storage (e.g 53)
+3) Backup Live Database Files
+    Use ‘pg_basebackup’ (easiest way)
+    Other methods exist
+4) Retain backup & WAL Files
+     Reply database to specific point in time
+5) Manual Log Switch (optional)
+     Use pg_switch_wal
+     Use pg_switch_xlog
+6) pg_basebackup options
+     Format: ‘tar’
+     Stream WAL files (default in PG 10+)
+     Disable WAL streaming (-X non)
+     Compression (- | gzip)
+----------------------------------------------------------------------------------------------------------------
+Restore Steps for PITR
+1) Stop Database Cluster
+     Use systemctl stop postgresql
+2) Destroy Existing Data
+     Remove all files from the datadirectory (e.g /var/lib/postgresql/10/main)
+3) Restore Cluster Files
+     Extract base.tar to the new data directory
+4) Restore WAL Files
+     Extract pg_wal.tar (pg 10+) or pg_xlog.tar to pg_wal directory
+     Copy archived WAL files to the archive log directory
+5) Create recovery.conf
+     Place in cluster directory
+     Specify restore_command
+     Optional: recovery_target_time
+6) Start DB Cluster
+     Use syste,ctl start postgresql
+     Restores to the specified point or the latest WAL file
+7) Verify Restore (Read-only mode)
+     The database is ready for read-only connections
+     Log indicates recovery has paused
+8) Resume Recovery (writeable mode)
+     Execute Select pg_reply_resume()
+     Log indicates archive recovery complete
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+Practical Example (Ubuntu)
+  PostgreSQL Version 10
+      The default install doesn’t enable WAL archiving
+  Set up Archive Directory
+      Create ‘/var/lib/postgresql/pg_log_archive.’
+      Ensure the  postgres user has write permissions
+  Configuration Files path
+      /etc/postgresql/10/main/postgresql.conf
+  Restart Service
+      Systemctl restart postgresql
+  Create/Populate database
+      Connect as the postgres user
+      Create a database and table, insert data
+Backup Categories
+    Logical Backups
+        Database is up / Running
+        Object level (tables, schemas)
+        Useful for Migration/Upgradation
+        Types
+        Database Dumps (pg_dump)
+           Individual database backup
+           Snapshot of DB at start time
+           Options
+               ▪Data Only (-a)
+               ▪Schema only (-s)
+               ▪Specified schema (-n)
+               ▪Exclude schema (-N)
+               ▪Table backups (-t)
+               ▪Output File (-f)
+           Formats
+               ▪Plain text sql script (-Fp)
+               ▪Tar format (-Ft)
+               ▪Compressed (-fc)
+               ▪Directory format (-fd)
+               ▪Verbose (-v)
+               ▪Compression (zip)
+               ▪Split command
+        Database Cluster Dumps (pg_dumpall)
+            Entire Instance backup
+            Useful for Global object loss
+                 Options
+                   ▪Data only (-a)
+                   ▪Definitions only (-s)
+                   ▪Global objects only (-g)
+                   ▪Skip roles (-r)
+                   ▪Clean database (-c)
+                   ▪Skip object ownership (-O)
+                   ▪Do not grant/revoke privileges (-x)
+  Restore Options
+      •Psql utility
+              Plain text format
+              Cluster level (pg_dumpall)
+              Require DB creation (unless -C)
+        Ex: psql -f file.sql -d dbname -U user
+      Pg_restore utility
+             Compressed formate (-Ft, -Fd, -Fc)
+             Options
+                 ▪Backup file format (-F)
+                 ▪Connect / Restore to DB (-d)
+                 ▪Create DB if not exists (-C)
+                 ▪Data Only (-a)
+▪Data definitions (-s)
+▪Specified Schema (-n)
+▪Exclude schema (-N)
+▪Table restore (-t)
+▪Verbose (-v)
+oPhysical Backups (File Level)
+▪Data file, tablespaces
+▪Data directory backup
+▪Restoration with WAL files (point in time recovery)
+▪Types
+•Offline backup (cold backup)
+oDatabase shut down
+oConsistent backup
+oNormal OS commands (e.g tar)
+•Online backup (hot backup)
+oDatabase up/running
+o24*7 environments
+oRequires continuous archiving mode
+oMethods
+▪Low level APIs (traditional)
+•Begin backup mode
+•Copy WAL files
+•End backup
+▪Pg_basebackup (latest methods)
+•No manual begin / end backup mode
+•Prerequisite: Continuous archiving
+•Binary copy of cluster
+•Used for PITR / Streaming replication
+•Prerequisites
+oWal_level = replics
+oArchive_mode = on
+oMax_wal_senders
+oWal_keep_size
+oPg_hba.conf changes (replication protocol)
+•Options
+oDestination directory (-D)
+oFile formate (plain/tar) (-F)
+oOld/new tablespace dir (-d old -D new)
+oCompression level (-Z)
+oProgress (-P)
+•Continuous Archiving
+oPrerequisite for online backups
+oArchives Wal files (transaction log)
+oMaintains ACID compliance
+oWAL file (16 mb each)
+oPrevents overwriting old WAL files
+oConfiguration parameters
+▪Wal_level = replica
+▪Archive_mode = on
+▪Archive_command (cp %p %f)
+▪Restart database after changes
+oMethods
+▪Archiver process (cp command)
+▪Streaming Wal (pg_receivewal)
+oPg_switch_wal (force log switch)
+•Point-In-Time Recovery
+oRestore DB to specific time/transaction
+oUses pg_basebackup + archived WAL files
+oSteps
+▪Stop cluster
+▪Take pg_basebackup
+▪Restore base backup
+▪Configure restore_command
+▪Create recovery.signal file
+▪Start database
+oTarget settings
+▪Target Time
+▪Target Transaction ID
+▪Target Action
+oCan perform PITR on production server
+•EBD Backup Tools
+oBarman
+▪Incremental backups (rsync)
+▪Register multiple servers
+▪Archive compresses backup
+▪PITR support
+▪Remote server mechanism
+opgBackRest
+▪Full, Incremental, Differential backups
+▪Retention policies
+▪Encryption support
+▪Cloud storage (S3, Azure, GCP)
+oComparison with pg_basebackup
+▪Tools offer more features (compression, encryption, parallel)
+▪Native pg_basebackup is a basic feature
+•Backup Strategies & Best Practices
+oStrategy
+▪Determine DB size
+▪Frequency of full/Incremental
+▪Schedule backups
+▪Separate WAL archive location
+▪Meet RPO/RTO requirements
+▪Adjust retention policies
+▪3-2-1 rule
+•
+3 Copies of backup
+•
+2 Local Copies
+•
+1 Offsite copy (or cloud)
+▪
+Encrypt backups
+o
+Best Practices
+•
+Document policies
+•
+Copy backup offsite/cloud (disaster prevention)
+•
+Regular test restore (test env)
+•
+Monitor backup process (PEM)
+•
+Logical backups are snapshots, not PITR
+•
+Restore to a directory other than the source
+•
+Clean DB before restore (good practice)
+
