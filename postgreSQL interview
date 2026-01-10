@@ -1,5 +1,13 @@
 1)What is MVCC in PostgreSQL
+MVCC (Multi-Version Concurrency Control) in PostgreSQL is the mechanism that allows multiple transactions to run simultaneously without blocking each other, while still ensuring data consistency and integrity. 
+It achieves this by keeping multiple versions of rows and letting each transaction see a snapshot of the database as of its start time.
+
 2)What is ctid in PostgreSQL
+In PostgreSQL, ctid is a system column that uniquely identifies the physical location of a row within a table. 
+It consists of a tuple (page_id, row_id) where the first number is the block (page) number on disk and the second is the row’s position within that page.
+
+
+
 3)How to update statistics in PostgreSQL
 4)What are the indexes available in PostgreSQL
  5)What is Gist and spgist indexes
