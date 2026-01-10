@@ -1,0 +1,41 @@
+Dead tuples in PostgreSQL are row versions that are no longer visible to any active transaction because they’ve been updated or deleted. 
+They remain in the table until cleaned up by the VACUUM process, which reclaims the space and prevents performance degradation.
+What Exactly Are Dead Tuples?
+- PostgreSQL uses MVCC (Multi-Version Concurrency Control) to manage concurrent transactions.
+- When a row is updated or deleted, PostgreSQL doesn’t immediately remove it:
+- The old version of the row becomes a dead tuple.
+- A new version (for updates) or a deletion marker (for deletes) is created.
+- Dead tuples are invisible to new transactions but still occupy disk space until cleaned.
+--hands-on demo execute below querys in step by step
+--create table 
+CREATE TABLE demo_dead_tuples (
+    id SERIAL PRIMARY KEY,
+    name TEXT
+);
+--insert data
+INSERT INTO demo_dead_tuples (name)
+VALUES ('Alice'), ('Bob'), ('Charlie'), ('David'), ('Eve');
+--select data from table 
+SELECT * FROM demo_dead_tuples;
+
+--now update/delete the rows in table  
+UPDATE demo_dead_tuples SET name = 'Alice_updated' WHERE name = 'Alice';
+DELETE FROM demo_dead_tuples WHERE name = 'Charlie';
+
+--run below query to check the number of dead tuples on the table.
+--n_live_tup live rows visible to queries
+--n_dead_tup dead tuples waiting for cleanup
+SELECT relname, n_live_tup, n_dead_tup, last_vacuum, last_autovacuum
+FROM pg_stat_user_tables
+WHERE relname = 'demo_dead_tuples';
+
+--to clear the dead tuples run vacuum
+VACUUM demo_dead_tuples;
+
+--now check dead tuples
+SELECT relname, n_live_tup, n_dead_tup
+FROM pg_stat_user_tables
+WHERE relname = 'demo_dead_tuples';
+
+--also, you can use the vacuum full 
+VACUUM FULL demo_dead_tuples;
