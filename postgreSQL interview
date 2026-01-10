@@ -1,0 +1,9 @@
+1)What is MVCC in PostgreSQL
+2)What is ctid in PostgreSQL
+3)How to update statistics in PostgreSQL
+4)What are the indexes available in PostgreSQL
+ 5)What is Gist and spgist indexes
+6)What is a B-Tree index
+7)Replication types in PostgreSQL
+8)Replication data types in PostgreSQL
+9)how to implement clustering in postgresql
