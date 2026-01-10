@@ -3,15 +3,47 @@ MVCC (Multi-Version Concurrency Control) in PostgreSQL is the mechanism that all
 It achieves this by keeping multiple versions of rows and letting each transaction see a snapshot of the database as of its start time.
 
 2)What is ctid in PostgreSQL
+Ctid=current tuple ID
 In PostgreSQL, ctid is a system column that uniquely identifies the physical location of a row within a table. 
 It consists of a tuple (page_id, row_id) where the first number is the block (page) number on disk and the second is the row’s position within that page.
 
+3)How to update statistics in PostgreSQL?
+Updated statistics are essential for query optimization because the planner relies on the table and index statistics for the best execution plan.
+- ANALYZE → updates statistics only.
+- VACUUM ANALYZE → cleans dead tuples + updates statistics.
+- Autovacuum → automatic background updates.
+- ALTER TABLE … SET STATISTICS → fine-tune per column.
+- pg_stats and pg_stats_all_tables→ view collected statistics.
 
-
-3)How to update statistics in PostgreSQL
 4)What are the indexes available in PostgreSQL
- 5)What is Gist and spgist indexes
+5)What is Gist and spgist indexes
 6)What is a B-Tree index
-7)Replication types in PostgreSQL
+
+7)Replication types in PostgreSQL?
+- Physical Replication → WAL-level, full cluster copy (streaming, synchronous, asynchronous).
+- Logical Replication → Table-level, selective, flexible (publish/subscribe).
+- Snapshot Replication → Initial data copy.
+- Cascading Replication → Standby-to-standby replication.
+
 8)Replication data types in PostgreSQL
-9)how to implement clustering in postgresql
+- Physical replication → WAL-level, binary data blocks.
+- Logical replication → Row-level, SQL operations.
+- Snapshot replication → Initial bulk data copy.
+- Cascading replication → Standby-to-standby WAL forwarding.
+
+9) How to implement clustering in PostgreSQL?
+
+10)What are the architectural differences between SQL and PostgreSQL servers?
+- SQL Server is a proprietary RDBMS from Microsoft with a tightly integrated ecosystem (Windows, .NET, Azure).
+- PostgreSQL is an open‑source RDBMS with an extensible architecture, supporting custom data types, functions, and advanced features like MVCC.
+- SQL Server emphasizes enterprise integration and tooling, while PostgreSQL emphasizes standards compliance, flexibility, and cross‑platform portability
+
+12)What is an Autovacuum in PostgreSQL?
+   Autovacuum is PostgreSQL’s background process that automatically runs VACUUM and ANALYZE to clean dead tuples, prevent bloat, and keep planner statistics up to date
+13)How to rebuild indexes in the PostgreSQL server?
+14)Have you worked on clusters
+15)Which tools have used for connecting postgresql server?
+   --command line
+   --pgadmin
+   --Visual Studio Code
+16)What are the main advantages of using the PostgreSQL server? I mean, why lot of customers moving to postgresql server?
