@@ -1,13 +1,13 @@
-1)What is MVCC in PostgreSQL
+1) What is MVCC in PostgreSQL
 MVCC (Multi-Version Concurrency Control) in PostgreSQL is the mechanism that allows multiple transactions to run simultaneously without blocking each other, while still ensuring data consistency and integrity. 
 It achieves this by keeping multiple versions of rows and letting each transaction see a snapshot of the database as of its start time.
 
-2)What is ctid in PostgreSQL
+2) What is ctid in PostgreSQL
 Ctid=current tuple ID
 In PostgreSQL, ctid is a system column that uniquely identifies the physical location of a row within a table. 
 It consists of a tuple (page_id, row_id) where the first number is the block (page) number on disk and the second is the row’s position within that page.
 
-3)How to update statistics in PostgreSQL?
+3) How to update statistics in PostgreSQL?
 Updated statistics are essential for query optimization because the planner relies on the table and index statistics for the best execution plan.
 - ANALYZE → updates statistics only.
 - VACUUM ANALYZE → cleans dead tuples + updates statistics.
@@ -15,17 +15,17 @@ Updated statistics are essential for query optimization because the planner reli
 - ALTER TABLE … SET STATISTICS → fine-tune per column.
 - pg_stats and pg_stats_all_tables→ view collected statistics.
 
-4)What are the indexes available in PostgreSQL
-5)What is Gist and spgist indexes
-6)What is a B-Tree index
+4) What are the indexes available in PostgreSQL
+5) What is Gist and spgist indexes
+6) What is a B-Tree index
 
-7)Replication types in PostgreSQL?
+7) Replication types in PostgreSQL?
 - Physical Replication → WAL-level, full cluster copy (streaming, synchronous, asynchronous).
 - Logical Replication → Table-level, selective, flexible (publish/subscribe).
 - Snapshot Replication → Initial data copy.
 - Cascading Replication → Standby-to-standby replication.
 
-8)Replication data types in PostgreSQL
+8) Replication data types in PostgreSQL
 - Physical replication → WAL-level, binary data blocks.
 - Logical replication → Row-level, SQL operations.
 - Snapshot replication → Initial bulk data copy.
@@ -33,17 +33,77 @@ Updated statistics are essential for query optimization because the planner reli
 
 9) How to implement clustering in PostgreSQL?
 
-10)What are the architectural differences between SQL and PostgreSQL servers?
+10) What are the architectural differences between SQL and PostgreSQL servers?
 - SQL Server is a proprietary RDBMS from Microsoft with a tightly integrated ecosystem (Windows, .NET, Azure).
 - PostgreSQL is an open‑source RDBMS with an extensible architecture, supporting custom data types, functions, and advanced features like MVCC.
 - SQL Server emphasizes enterprise integration and tooling, while PostgreSQL emphasizes standards compliance, flexibility, and cross‑platform portability
 
-12)What is an Autovacuum in PostgreSQL?
-   Autovacuum is PostgreSQL’s background process that automatically runs VACUUM and ANALYZE to clean dead tuples, prevent bloat, and keep planner statistics up to date
-13)How to rebuild indexes in the PostgreSQL server?
-14)Have you worked on clusters
-15)Which tools have used for connecting postgresql server?
+12) What is an Autovacuum in PostgreSQL?
+Autovacuum is PostgreSQL’s background process that automatically runs VACUUM and ANALYZE to clean dead tuples, prevent bloat, and keep planner statistics up to date
+
+13) How to rebuild indexes in the PostgreSQL server?
+14) Have you worked on clusters
+15) Which tools have used for connecting postgresql server?
    --command line
    --pgadmin
    --Visual Studio Code
-16)What are the main advantages of using the PostgreSQL server? I mean, why lot of customers moving to postgresql server?
+16) What are the main advantages of using the PostgreSQL server? Why are a lot of customers moving to PostgreSQL server?
+PostgreSQL is gaining massive adoption because it combines enterprise-grade reliability, advanced features, and cost efficiency in a fully open-source package. 
+Customers are moving to PostgreSQL to reduce licensing costs, gain flexibility, and leverage its strong performance, extensibility, and cloud-native support.
+  --Open Source with No Licensing Costs
+  --Rich Feature Set
+  --Performance & Scalability
+  --Strong Community & Ecosystem
+  --Cloud & Container Friendly
+17) What is the difference between postgresql.conf and postgresql.auto.conf
+18) What are the different configuration files in postgresql
+19) What is your backup strategy in your environment
+20) Have you done any point-in-time recovery in postgresql
+21) What is the difference between pg_dump and pg_dumpall
+22) What is pg_basebackup
+23) How to export the data into csv from postgresql table?
+24) Have you done any migration in postgresql
+
+25) Have you worked on postgresql AWS RDS instance? Then tell me the environment.
+"Yes, I have worked on AWS RDS. Our environment was deployed in a Multi-AZ setup for high availability, with read replicas to handle reporting queries. 
+We enabled automated backups with point-in-time recovery, and used CloudWatch and Performance Insights for monitoring and tuning. 
+Security was enforced through parameter groups, encryption, and restricted security groups. 
+For migrations, we used pg_dump/pg_restore and AWS DMS, and regularly tested failover scenarios to ensure resilience."
+
+26) Have you done performance tuning in postgresql, how you done tell me the steps
+
+27) Difference between vacuum and vacuum full?
+   - VACUUM = lightweight cleanup, keeps performance stable. 
+   - VACUUM FULL = heavy operation, reclaims disk space, but locks tables.
+We use VACUUM FULL only when a table has had massive deletions, and we need to reclaim disk space. 
+Since it locks the table and rewrites it, we schedule it during maintenance windows to avoid downtime.
+
+28) How will we do point-in-time recovery using commands in postgresql
+29) How do you see the plan of the query
+30) Cursor: How it will be used in PostgreSQL
+31) What is the default index in postgresql
+32) How will you implement replication in PostgreSQL? Tell me the steps
+33) What is the physical  architecture of PostgreSQL?
+34) What are replication and its types?
+35) What are the types of indexes?
+36) Write the differences between vacuum and vacuumfull?
+
+37) why vacuum full not performed in production?
+ACUUM FULL is not typically performed in production because it requires an exclusive lock on the table and rewrites the entire file, which can cause downtime 
+and heavy I/O load. Instead, we rely on autovacuum for routine cleanup, and if we need to reclaim disk space, 
+we use tools like pg_repack that achieve similar results without blocking queries.
+
+38) What is a WAL writer?
+39) write command for backup in schema level and table level?
+40) What backup strategy is used?
+41) What are the steps in creating replication?
+
+42) Authentication types?
+PostgreSQL supports multiple authentication methods, ranging from simple trust-based access to advanced Kerberos/GSSAPI integration. 
+The choice depends on your environment (development, production, cloud, enterprise security). 
+The most common are password-based (md5, scram-sha-256), trust, and host-based authentication via pg_hba.conf.
+
+43) What to do when the user has experied in 31st of this month, what command or role u would do?
+44) How to dump the table structure in schema level?
+45) What is a wal logger?
+46) What are the background processes in PostgreSQL?
