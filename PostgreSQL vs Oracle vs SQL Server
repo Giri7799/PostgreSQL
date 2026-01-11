@@ -1,0 +1,13 @@
+PostgreSQL vs Oracle vs SQL Server
+Feature / Aspect -------PostgreSQL-------Oracle------SQL Server 
+Cost / Licensing------open-source/NO fees----licensing fee, per-core pricing------licensing, per-core or CAL model
+Community & Ecosystem-----Large global community, frequent updates, rich extensions (PostGIS, TimescaleDB)----Vendor-driven, closed ecosystem-----Vendor-driven, strong Microsoft ecosystem
+Cloud Support---Fully supported on AWS, Azure, GCP; container/Kubernetes friendly----Oracle Cloud, AWS RDS (limited), Azure----Azure-native, AWS RDS support
+Data Types----Rich support: JSON/JSONB, arrays, hstore, custom types----Strong relational + XML, JSON support added later----JSON support, but less flexible than PostgreSQL
+Extensibility---Highly extensible (custom functions, operators, FDWs) ----Limited extensibility-----Limited extensibility
+Performance & Scalability----Excellent for OLTP + analytics; parallel queries, partitioning, MVCC----High performance, but requires tuning and costly hardware----Good performance, optimized for Windows ecosystem
+Replication & HA ----Built-in streaming replication, logical replication, PITR----Advanced replication, but complex and costly-----AlwaysOn Availability Groups, mirroring
+Indexing Options-----Multiple: B-Tree, Hash, GiST, GIN, BRIN-----Advanced indexing, bitmap indexes-----B-Tree, Columnstore indexes
+Use Cases-----OLTP, analytics, geospatial, time-series, hybrid workloads-----Enterprise OLTP, ERP, mission-critical apps-----Enterprise OLTP, BI, integration with Microsoft stack
+Adoption Trend-----Rapidly growing, preferred for cloud-native and modern apps----Declining in startups due to cost----Stable in enterprises tied to Microsoft ecosystem
+
