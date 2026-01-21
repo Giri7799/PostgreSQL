@@ -16,8 +16,19 @@ Updated statistics are essential for query optimization because the planner reli
 - pg_stats and pg_stats_all_tables→ view collected statistics.
 
 4) What are the indexes available in PostgreSQL
-5) What is Gist and spgist indexes
+   >B-tree--equality & range queries
+   >Hash- equality only
+   >GIN 
+   >GIST
+   >SP-GIST
+   >BRIN
+   >expression
+5) What are Gist and spgist indexes?
+GiST (Generalized Search Tree) and SP-GiST (Space-Partitioned GiST) are advanced index types designed for complex data structures. 
+GiST is highly flexible and supports things like ranges, geometric data, and full-text search, while SP-GiST is optimized for partitioned data structures.
+
 6) What is a B-Tree index
+The B-tree(Balanced tree) index is the default index and most commonly used index type. its a self-balancing tree structure that keeps data sorted, allowing fast lookups, inserts, deletes, and range queries.
 
 7) Replication types in PostgreSQL?
 - Physical Replication → WAL-level, full cluster copy (streaming, synchronous, asynchronous).
@@ -42,12 +53,14 @@ Updated statistics are essential for query optimization because the planner reli
 Autovacuum is PostgreSQL’s background process that automatically runs VACUUM and ANALYZE to clean dead tuples, prevent bloat, and keep planner statistics up to date
 
 13) How to rebuild indexes in the PostgreSQL server?
+Using the reindex command, we can rebuild the index on a single index, all indexes on a table, all indexes in a schema, or the entire database.
+
 14) Have you worked on clusters
 15) Which tools have used for connecting postgresql server?
    --command line
    --pgadmin
    --Visual Studio Code
-16) What are the main advantages of using the PostgreSQL server? Why are a lot of customers moving to PostgreSQL server?
+16) What are the main advantages of using the PostgreSQL server? Why are a lot of customers moving to the PostgreSQL server?
 PostgreSQL is gaining massive adoption because it combines enterprise-grade reliability, advanced features, and cost efficiency in a fully open-source package. 
 Customers are moving to PostgreSQL to reduce licensing costs, gain flexibility, and leverage its strong performance, extensibility, and cloud-native support.
   --Open Source with No Licensing Costs
@@ -55,11 +68,12 @@ Customers are moving to PostgreSQL to reduce licensing costs, gain flexibility, 
   --Performance & Scalability
   --Strong Community & Ecosystem
   --Cloud & Container Friendly
-17) What is the difference between postgresql.conf and postgresql.auto.conf
+17) What is the difference between postgresql.conf and postgresql. auto.conf
 18) What are the different configuration files in postgresql
 19) What is your backup strategy in your environment
 20) Have you done any point-in-time recovery in postgresql
 21) What is the difference between pg_dump and pg_dumpall
+Use pg_dumpall for global objects and pg_dump for each database, then restore in order.
 22) What is pg_basebackup
 23) How to export the data into csv from postgresql table?
 24) Have you done any migration in postgresql
@@ -81,17 +95,26 @@ Since it locks the table and rewrites it, we schedule it during maintenance wind
 28) How will we do point-in-time recovery using commands in postgresql
 29) How do you see the plan of the query
 30) Cursor: How it will be used in PostgreSQL
-31) What is the default index in postgresql
+31) What is the default index in PostgreSQL?
+   >B-tree is the default index
 32) How will you implement replication in PostgreSQL? Tell me the steps
 33) What is the physical  architecture of PostgreSQL?
 34) What are replication and its types?
 35) What are the types of indexes?
+   >B-tree--equality & range queries
+   >Hash- equality only
+   >GIN 
+   >GIST
+   >SP-GIST
+   >BRIN
+   >expression
+
 36) Write the differences between vacuum and vacuumfull?
+Vacuum removes dead tuples and updates statistics without locking tables, while vacuum full rewrites the entire table to reclaim disk space. but requires an exclusive lock and can block queries. 
 
 37) why vacuum full not performed in production?
-ACUUM FULL is not typically performed in production because it requires an exclusive lock on the table and rewrites the entire file, which can cause downtime 
-and heavy I/O load. Instead, we rely on autovacuum for routine cleanup, and if we need to reclaim disk space, 
-we use tools like pg_repack that achieve similar results without blocking queries.
+VACUUM FULL is not typically performed in production because it requires an exclusive lock on the table and rewrites the entire file, which can cause downtime and heavy I/O load. 
+Instead, we rely on autovacuum for routine cleanup, and if we need to reclaim disk space, we use tools like pg_repack that achieve similar results without blocking queries.
 
 38) What is a WAL writer?
 39) write command for backup in schema level and table level?
@@ -107,3 +130,69 @@ The most common are password-based (md5, scram-sha-256), trust, and host-based a
 44) How to dump the table structure in schema level?
 45) What is a wal logger?
 46) What are the background processes in PostgreSQL?
+47)wal logger
+48)work_mem
+49) Roles need to change along with the password
+50)shared buffer
+51)mvcc, replication
+52backup strategy
+53)What are the advantages in using PostgreSQL or benefits of using PostgreSQL
+54)What is CRUD in PostgreSQL
+55)How to select the top 2 rows from PostgreSQL
+56)What are the main constraints in PostgreSQL
+57)What is ACID properties
+58)What is normalization in PostgreSQL
+59)What is PlpgSQL
+60)What is bgwriter
+61)Tell me the syntax for creatinga  function
+62)Tell me the syntax for creatinga  stored procedure
+63)Tell me the syntax for creating a view
+64)Tell me the syntax for creating a trigger
+65) How can you assign select and insert permissions on a table to the user
+66)How can you remove the access?
+67)How can we permit stored procedure and function and views?
+68)How can we permit the schema
+69)What is the explain Analyze command
+70) Difference between role and user in PostgreSQL
+71)What will you do if the user complains about a performance issue
+72)Have you made any mistakes in your experience?
+73)What are the memory components in PostgreSQL
+74)What is the significance of pg_ident?conf file
+75)What is this wal_level parameter
+76) How can you change the parameter value in PostgreSQL
+77)What is the significance of search_path in postgres
+78)What is oid?
+79)What is a ring buffer in postgres
+80)What do you mean by postgres cluster
+81)What is LSN
+82)What are the default databases created after setting up postgres cluster
+83)What is the significance of template0 and template1 databases? What is the difference between these two?
+84) What is the use ofthe  Postgres database
+85) How to start and stop the PostgreSQL software.
+86)What are foreign data wrappers? What is its use?
+87)Difference between explain and explain analyze in PostgreSQL?
+
+88)How can I check the version of PostgreSQL?
+using commands like psql --version, postgres --version, select version(); or show server_version;
+Most used command is select version();
+
+89)How do you monitor long-running queries in PostgreSQL?
+using system views like pg_stat_activity and pg_stat_statements in pgadmin tool
+
+90)How to kill a session in PostgreSQL?
+91)Which utility is used to upgrade postgres cluster?
+92)What is the difference between pg_cancel_backend and pg_terminate_backend?
+
+93)What is auto-vacuuming in PostgreSQL?
+The auto-vacuuming is an automatic background process that cleans up dead tuples, reclaims storage, and updates the query planner statistics. 
+It ensures the database stays healthy without requiring manual vacuum commands.
+
+94)How can I rebuild the index?
+Using the reindex command, we can rebuild the index on a single index, all indexes on a table, all indexes in a schema, or the entire database.
+
+95)Explain different backup methods in PostgreSQL?
+96)What do you mean by continuous archiving in PostgreSQL?
+97)How do you find which objects are bloated in db?
+98)What do you understand about a base directory in PostgreSQL?
+99)What is the maximum size for a table in PostgreSQL?
+100)How do you install PostgreSQL on Linux
