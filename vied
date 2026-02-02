@@ -1,1 +1,67 @@
 https://youtu.be/E7YQXAyNxzM?si=K-9ahWsjmFXgnCLt
+
+https://www.youtube.com/watch?v=poLBRs0kF08
+
+https://www.youtube.com/watch?v=poLBRs0kF08
+
+https://www.youtube.com/watch?v=zdcO4Nknkew
+USE [test4]
+GO
+
+DECLARE @Count INT
+SET @Count = 0
+WHILE (@Count <= 70)
+BEGIN
+                               
+    DECLARE @Query NVARCHAR(MAX)
+	DECLARE @count1 NVARCHAR(256)
+	SET @count1=@count
+    SET @Query = 'ALTER DATABASE test4 ADD FILEGROUP fg_2017_percentiledatay0_'+@Count1+';'
+
+     PRINT @QUERY
+     --EXEC(@Query)
+   SET @Count = @Count + 2
+END
+DECLARE @Query1 NVARCHAR(MAX)
+SET @Query1= 'ALTER DATABASE test4 ADD FILEGROUP fg_2017_percentiledatay0_exceptional;'
+PRINT @QUERY1
+--EXEC(@Query1)
+
+USE [test3]
+GO
+
+DECLARE @Count INT
+SET @Count = 0
+WHILE (@Count <= 719)
+BEGIN
+                               
+    DECLARE @Query NVARCHAR(MAX)
+	DECLARE @count1 NVARCHAR(256)
+	SET @count1=@count
+    SET @Query = 'ALTER DATABASE [test3]
+		ADD FILE 
+		(
+		NAME = [fg_Linkhistoricaly05_'+@count1+'],
+		FILENAME = ''G:\MSSQL\DATA3\fg_Linkhistoricaly05_'+@count1+'.ndf'',
+			SIZE = 512 KB, 
+			MAXSIZE = UNLIMITED, 
+			FILEGROWTH = 1024 KB
+		) TO FILEGROUP [fg_Linkhistoricaly05_'+@count1+'];'
+
+     PRINT @QUERY
+   EXEC(@Query)
+   SET @Count = @Count + 15
+END
+DECLARE @Query1 NVARCHAR(MAX)
+SET @Query1 = 'ALTER DATABASE [test3]
+		ADD FILE 
+		(
+		NAME = [fg_Linkhistoricaly05_exceptional],
+		FILENAME = ''G:\MSSQL\DATA3\fg_Linkhistoricaly05_exceptional.ndf'',
+			SIZE = 512 KB, 
+			MAXSIZE = UNLIMITED, 
+			FILEGROWTH = 1024 KB
+		) TO FILEGROUP [fg_Linkhistoricaly05_exceptional];'
+
+     PRINT @QUERY1
+   EXEC(@Query1)
